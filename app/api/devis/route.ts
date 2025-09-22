@@ -1,14 +1,8 @@
-// app/api/devis/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-// On n'importe AUCUN type depuis @prisma/client ici.
-// On définit des unions locales basées sur tes valeurs réelles :
 const ALLOWED_SERVICE_TYPES = ["AUDIT", "RESEAUX", "WEB"] as const;
 type ServiceTypeLocal = (typeof ALLOWED_SERVICE_TYPES)[number];
-
-const DEFAULT_STATUS = "PENDING" as const; // DevisStatus attendu côté DB
-type DevisStatusLocal = typeof DEFAULT_STATUS;
 
 export async function POST(req: Request) {
   try {
@@ -27,19 +21,17 @@ export async function POST(req: Request) {
 
     if (!contactName?.trim() || !email?.trim() || !serviceType) {
       return NextResponse.json(
-        { error: "contactName, email, serviceType requis" },
+        { error: "contactName, email et serviceType sont requis" },
         { status: 400 }
       );
     }
 
-    // Validation / normalisation du serviceType envoyé
     const svc: ServiceTypeLocal = (
       ALLOWED_SERVICE_TYPES as readonly string[]
     ).includes(String(serviceType))
       ? (serviceType as ServiceTypeLocal)
       : "WEB";
 
-    // Cast numériques robustes (accepte string "1234")
     const bMin =
       typeof budgetMin === "number"
         ? budgetMin
@@ -56,22 +48,27 @@ export async function POST(req: Request) {
 
     const saved = await prisma.devisRequest.create({
       data: {
-        company: company?.toString() || null,
-        contactName: contactName.toString(),
-        email: email.toString(),
-        phone: phone?.toString() || null,
-        serviceType: svc, // ← string littérale valide pour l'enum Prisma
-        budgetMin: bMin,
-        budgetMax: bMax,
-        details: details?.toString() || null,
-        source: source?.toString() || null,
-        status: DEFAULT_STATUS as DevisStatusLocal, // ← string littérale "PENDING"
-      } as any, // ← évite les frictions de typings si le client Prisma côté CI n'a pas les enums
+        company: company ?? null,
+        contactName,
+        email,
+        phone: phone ?? null,
+        serviceType: svc, // enum Prisma: AUDIT | RESEAUX | WEB
+        budgetMin: bMin ?? null, // Int? → number | null
+        budgetMax: bMax ?? null,
+        details: details ?? null,
+        source: source ?? "site",
+        // status: PENDING (défaut dans le modèle)
+      },
+      select: { id: true },
     });
 
     return NextResponse.json({ ok: true, id: saved.id });
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  } catch (e: any) {
+    console.error("Erreur API /api/devis:", e);
+    // expose la vraie cause en dev (pratique pour toi)
+    return NextResponse.json(
+      { error: e?.message || "Erreur serveur" },
+      { status: 500 }
+    );
   }
 }
