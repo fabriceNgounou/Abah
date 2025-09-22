@@ -1,14 +1,14 @@
 // app/api/devis/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import type { Prisma } from "@prisma/client";
 
-// Autorisations côté API (ajuste à tes valeurs réelles du schema)
-const ALLOWED_SERVICE_TYPES: readonly Prisma.$Enums.ServiceType[] = [
-  "AUDIT",
-  "RESEAUX",
-  "WEB",
-] as const;
+// On n'importe AUCUN type depuis @prisma/client ici.
+// On définit des unions locales basées sur tes valeurs réelles :
+const ALLOWED_SERVICE_TYPES = ["AUDIT", "RESEAUX", "WEB"] as const;
+type ServiceTypeLocal = (typeof ALLOWED_SERVICE_TYPES)[number];
+
+const DEFAULT_STATUS = "PENDING" as const; // DevisStatus attendu côté DB
+type DevisStatusLocal = typeof DEFAULT_STATUS;
 
 export async function POST(req: Request) {
   try {
@@ -32,14 +32,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Normalisation / validation "serviceType"
-    const svc: Prisma.$Enums.ServiceType = (
+    // Validation / normalisation du serviceType envoyé
+    const svc: ServiceTypeLocal = (
       ALLOWED_SERVICE_TYPES as readonly string[]
-    ).includes(serviceType)
-      ? (serviceType as Prisma.$Enums.ServiceType)
+    ).includes(String(serviceType))
+      ? (serviceType as ServiceTypeLocal)
       : "WEB";
 
-    // Optionnel: cast numérique sûr
+    // Cast numériques robustes (accepte string "1234")
     const bMin =
       typeof budgetMin === "number"
         ? budgetMin
@@ -60,13 +60,13 @@ export async function POST(req: Request) {
         contactName: contactName.toString(),
         email: email.toString(),
         phone: phone?.toString() || null,
-        serviceType: svc,
+        serviceType: svc, // ← string littérale valide pour l'enum Prisma
         budgetMin: bMin,
         budgetMax: bMax,
         details: details?.toString() || null,
         source: source?.toString() || null,
-        status: "PENDING" as Prisma.$Enums.DevisStatus, // ← au lieu d'importer DevisStatus
-      },
+        status: DEFAULT_STATUS as DevisStatusLocal, // ← string littérale "PENDING"
+      } as any, // ← évite les frictions de typings si le client Prisma côté CI n'a pas les enums
     });
 
     return NextResponse.json({ ok: true, id: saved.id });
