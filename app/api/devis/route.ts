@@ -1,6 +1,14 @@
+// app/api/devis/route.ts
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db"; // ✅ chemin corrigé
-import { DevisStatus, ServiceType } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import type { Prisma } from "@prisma/client";
+
+// Autorisations côté API (ajuste à tes valeurs réelles du schema)
+const ALLOWED_SERVICE_TYPES: readonly Prisma.$Enums.ServiceType[] = [
+  "AUDIT",
+  "RESEAUX",
+  "WEB",
+] as const;
 
 export async function POST(req: Request) {
   try {
@@ -15,32 +23,49 @@ export async function POST(req: Request) {
       budgetMax,
       details,
       source,
-    } = body;
+    } = body ?? {};
 
-    if (!contactName || !email || !serviceType) {
+    if (!contactName?.trim() || !email?.trim() || !serviceType) {
       return NextResponse.json(
         { error: "contactName, email, serviceType requis" },
         { status: 400 }
       );
     }
 
-    // Validation simple serviceType
-    const svc: ServiceType = ["AUDIT", "RESEAUX", "WEB"].includes(serviceType)
-      ? serviceType
+    // Normalisation / validation "serviceType"
+    const svc: Prisma.$Enums.ServiceType = (
+      ALLOWED_SERVICE_TYPES as readonly string[]
+    ).includes(serviceType)
+      ? (serviceType as Prisma.$Enums.ServiceType)
       : "WEB";
+
+    // Optionnel: cast numérique sûr
+    const bMin =
+      typeof budgetMin === "number"
+        ? budgetMin
+        : Number.isFinite(Number(budgetMin))
+        ? Number(budgetMin)
+        : null;
+
+    const bMax =
+      typeof budgetMax === "number"
+        ? budgetMax
+        : Number.isFinite(Number(budgetMax))
+        ? Number(budgetMax)
+        : null;
 
     const saved = await prisma.devisRequest.create({
       data: {
-        company,
-        contactName,
-        email,
-        phone,
+        company: company?.toString() || null,
+        contactName: contactName.toString(),
+        email: email.toString(),
+        phone: phone?.toString() || null,
         serviceType: svc,
-        budgetMin,
-        budgetMax,
-        details,
-        source,
-        status: DevisStatus.PENDING,
+        budgetMin: bMin,
+        budgetMax: bMax,
+        details: details?.toString() || null,
+        source: source?.toString() || null,
+        status: "PENDING" as Prisma.$Enums.DevisStatus, // ← au lieu d'importer DevisStatus
       },
     });
 
