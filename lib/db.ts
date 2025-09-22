@@ -1,7 +1,9 @@
+// lib/db.ts
 import { PrismaClient } from "@prisma/client";
 
-// Evite de recréer un client à chaque hot-reload en dev
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
 export const prisma =
   globalForPrisma.prisma ??

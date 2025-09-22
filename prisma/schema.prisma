@@ -1,15 +1,88 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ServiceType {
+  AUDIT
+  RESEAUX
+  WEB
+}
+
+enum DevisStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model DevisRequest {
+  id          String      @id @default(cuid())
+  company     String?
+  contactName String
+  email       String
+  phone       String?
+  serviceType ServiceType
+  budgetMin   Int?
+  budgetMax   Int?
+  details     String?
+  source      String?
+  status      DevisStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // back-relation 1..n : un devis peut générer plusieurs projets
+  projects Project[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  summary     String?
+  content     String?
+  coverUrl    String?
+  clientName  String?
+  tags        String[] // PostgreSQL array
+  isPublished Boolean  @default(false)
+
+  // relation vers le devis d’origine (facultatif)
+  createdFromDevisId String?
+  createdFromDevis   DevisRequest? @relation(fields: [createdFromDevisId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([updatedAt])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
