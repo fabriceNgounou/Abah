@@ -9,18 +9,17 @@ export default function Apropos() {
   const year = new Date().getFullYear();
 
   return (
-    // padding-top pour laisser respirer sous la Navbar sticky globale
     <main className="min-h-screen bg-[#0b1220] text-[#e8eefc] pt-20">
-      {/* HERO (ex-header visuel, sans 2e nav) */}
-      <section className="py-20 md:py-20">
-        <div className="container mx-auto px-6 grid md:grid-cols-[1.1fr_.9fr] items-center gap-7">
+      {/* HERO */}
+      <section className="py-16 md:py-20">
+        <div className="container mx-auto px-6 grid md:grid-cols-[1.05fr_.95fr] items-center gap-7">
           <div className="card pad">
             <div className="flex items-center gap-3 font-bold mb-3">
               <Image
                 src="/logo.png"
                 alt="Logo AABAH"
-                width={220}
-                height={70}
+                width={200}
+                height={60}
                 priority
               />
               <span>Solutions Informatiques AABAH</span>
@@ -29,62 +28,59 @@ export default function Apropos() {
             <p className="badge">
               🔒 Audit • 🧭 Consulting • 🛜 Réseaux • 🌐 Web
             </p>
+
             <h1 className="title">
-              Votre partenaire IT pour des systèmes{" "}
-              <span style={{ color: "var(--accent,#10b981)" }}>sécurisés</span>,{" "}
-              <span style={{ color: "var(--primary,#3b82f6)" }}>fiables</span>{" "}
-              et{" "}
-              <span style={{ color: "var(--warning,#f59e0b)" }}>
-                performants
-              </span>
-              .
+              Nous sécurisons, modernisons et{" "}
+              <span style={{ color: "var(--accent,#10b981)" }}>optimisons</span>{" "}
+              votre système d’information.
             </h1>
+
             <p className="subtitle">
-              AABAH accompagne les PME et institutions dans l’audit de sécurité,
-              la conception et la maintenance d’infrastructures réseaux, la
-              téléphonie et la vidéosurveillance, ainsi que la création et
-              l’hébergement de sites web — avec un support proactif 24/7.
+              De l’audit de sécurité aux réseaux & maintenance, de la messagerie
+              pro à la téléphonie et la vidéosurveillance, jusqu’à la création
+              de sites web et aux formations : AABAH accompagne les PME et
+              institutions avec un suivi proactif.
             </p>
 
             <div className="badges">
-              <span className="badge">Tests d’intrusion</span>
+              <span className="badge">Pentest & recommandations</span>
               <span className="badge">Administration de parc</span>
-              <span className="badge">Support 24/7</span>
-              <span className="badge">Hébergement & SEO</span>
-              <span className="badge">Vente de matériels</span>
+              <span className="badge">Support à distance & on-site</span>
+              <span className="badge">Hébergement & e-mails pro</span>
+              <span className="badge">SEO & mailing list</span>
             </div>
 
-            <div className="kpi">
+            <div className="kpi mt-4">
               <div className="item">
-                <div className="muted">SLA</div>
-                <div>
-                  <strong>99.9%</strong> dispo
-                </div>
-              </div>
-              <div className="item">
-                <div className="muted">Temps de prise en charge</div>
+                <div className="muted">Prise en charge</div>
                 <div>
                   <strong>&lt; 1h</strong> (remote)
                 </div>
               </div>
               <div className="item">
-                <div className="muted">Support</div>
+                <div className="muted">Disponibilité</div>
                 <div>
                   <strong>24/7</strong> multi-canaux
                 </div>
               </div>
+              <div className="item">
+                <div className="muted">Sérénité</div>
+                <div>
+                  <strong>PRA/Backups</strong> cadrés
+                </div>
+              </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="#services"
+                href="#domaines"
                 className="btn"
                 style={{
                   background:
                     "linear-gradient(135deg,var(--primary,#3b82f6),#22d3ee)",
                 }}
               >
-                Découvrir nos services
+                Découvrir nos expertises
               </Link>
               <Link
                 href="/devis"
@@ -94,76 +90,118 @@ export default function Apropos() {
                     "linear-gradient(135deg,var(--accent,#10b981),#22c55e)",
                 }}
               >
-                Obtenir une estimation
+                Obtenir un devis
               </Link>
             </div>
           </div>
 
           <div className="card pad" aria-label="Illustration réseau & sécurité">
-            <img
-              alt="Illustration réseau sécurisé"
-              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop"
-              className="w-full rounded-[16px]"
+            <Image
+              src="/reseau-globe.png"
+              alt="Réseau & infrastructure"
+              width={900}
+              height={600}
+              className="w-full h-auto rounded-[16px]"
+              priority
             />
           </div>
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section id="services" className="section">
+      {/* QUI SOMMES-NOUS */}
+      <section id="about" className="section">
+        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-6 items-center">
+          <div className="card pad">
+            <h2 className="text-2xl md:text-[28px] mb-3">Qui sommes-nous ?</h2>
+            <p className="muted">
+              AABAH est une PME spécialisée dans les prestations informatiques
+              et mobiles. L’informatique est une passion avant d’être notre
+              métier ; nous visons des services de qualité et des solutions
+              innovantes, adaptées à vos besoins (audit, réseaux, maintenance,
+              web, etc.). Notre objectif : votre satisfaction durable.{" "}
+              {/* PDF-based */}
+            </p>
+            <div className="mt-4">
+              <ul className="list-disc pl-5 muted space-y-1">
+                <li>Audit informatique (sécurité & tests d’intrusion)</li>
+                <li>
+                  Réseaux & IT Solutions (consulting, maintenance, messagerie)
+                </li>
+                <li>Téléphonie d’entreprise & vidéosurveillance IP</li>
+                <li>Web services (sites, mailing list, social marketing)</li>
+                <li>
+                  Formations (Office, réseaux & systèmes, internet & services)
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="card pad">
+            <Image
+              src="/parc.png"
+              alt="Gestion de parc de bout en bout"
+              width={900}
+              height={700}
+              className="w-full h-auto rounded-[16px]"
+            />
+          </div>
+        </div>
+      </section>
+
+
+      {/* RÉFÉRENCES */}
+      <section id="references" className="section">
         <div className="container mx-auto px-6">
           <h2 className="text-2xl md:text-[28px] mb-4">
-            Nos pôles d’expertise
+            Références (extraits)
           </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <article className="card pad service">
-              <div className="icon">🛡</div>
-              <h3 className="mt-1 mb-2">Audit informatique</h3>
-              <p className="muted">
-                Évaluez vos risques et renforcez votre posture de sécurité.
-              </p>
-              <ul className="list-disc pl-5 mt-2 muted">
-                <li>Audit de sécurité de SI</li>
-                <li>Tests d’intrusion (pentest)</li>
-                <li>Recommandations & plan d’action</li>
-                <li>Politique de sauvegarde & PRA</li>
-              </ul>
-            </article>
-
-            <article className="card pad service">
-              <div className="icon">🛜</div>
-              <h3 className="mt-1 mb-2">Réseaux & IT Solutions</h3>
-              <p className="muted">
-                Des infrastructures robustes, administrées et monitorées.
-              </p>
-              <ul className="list-disc pl-5 mt-2 muted">
-                <li>Conception & déploiement (LAN/Wi-Fi)</li>
-                <li>Administration de parc & serveurs</li>
-                <li>Soutien technique sur site & à distance</li>
-                <li>Téléphonie d’entreprise (VoIP)</li>
-                <li>Vidéosurveillance IP</li>
-                <li>Vente de matériels informatiques</li>
-              </ul>
-            </article>
-
-            <article className="card pad service">
-              <div className="icon">🌐</div>
-              <h3 className="mt-1 mb-2">Web Services</h3>
-              <p className="muted">Votre présence en ligne, de A à Z.</p>
-              <ul className="list-disc pl-5 mt-2 muted">
-                <li>Sites vitrines & dynamiques</li>
-                <li>Hébergement & e-mails pro</li>
-                <li>SEO & suivi</li>
-                <li>Mailing list (campagnes e-mail)</li>
-              </ul>
-            </article>
+          <div className="card pad overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-left text-[var(--muted,#8aa0c9)]">
+                <tr>
+                  <th className="py-2 pr-3">Entreprise</th>
+                  <th className="py-2">Prestations</th>
+                </tr>
+              </thead>
+              <tbody className="align-top">
+                {[
+                  ["ENEO CAMEROON S.A", "Contrôle d’accès"],
+                  ["DOMAYO FARMING S.A", "Maintenance informatique"],
+                  ["ALUTOLE S.A", "Maintenance informatique"],
+                  ["ST Expertise Comptable", "Maintenance informatique"],
+                  ["STUDELY S.A.R.L", "Maintenance informatique"],
+                  ["CLS AUDIT CONSEIL S.A.R.L", "Maintenance informatique"],
+                  ["PICOM S.A.R.L", "Maintenance informatique"],
+                  ["GOLDEN PREMIUM S.A.R.L", "Maintenance informatique"],
+                  ["ETS TCHAMGOUE SAHA ELIE", "Maintenance informatique"],
+                  ["COPROTEV S.A.R.L", "Maintenance informatique"],
+                  [
+                    "MOBICOMT S.A.R.L",
+                    "Déploiement parc • Maintenance • Social Marketing",
+                  ],
+                  ["AT GRAPHILINE INDUSTRY", "Maintenance informatique"],
+                  [
+                    "ASCOMFISC S.A.R.L",
+                    "Admin & maintenance parc • Fourniture d’équipements",
+                  ],
+                  ["ETS TEGA ECLAIRAGE", "Révision & maintenance du parc"],
+                ].map(([c, p], i) => (
+                  <tr
+                    key={i}
+                    className="border-t border-[rgba(138,160,201,.15)]"
+                  >
+                    <td className="py-2 pr-3">{c}</td>
+                    <td className="py-2">{p}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           <div className="card pad border border-dashed border-[rgba(138,160,201,.35)] mt-4 flex flex-wrap items-center justify-between gap-4">
             <p className="subtitle !m-0">
-              Besoin d’un contrat de <strong>maintenance</strong> ou d’un{" "}
-              <strong>audit</strong> rapide&nbsp;?
+              Besoin d’un <strong>audit</strong>, d’une{" "}
+              <strong>maintenance</strong> ou d’un
+              <strong> déploiement réseau</strong> ?
             </p>
             <Link
               className="btn"
@@ -173,7 +211,7 @@ export default function Apropos() {
                   "linear-gradient(135deg,var(--primary,#3b82f6),#22d3ee)",
               }}
             >
-              Parlons de votre projet
+              Demander un devis
             </Link>
           </div>
         </div>
@@ -239,7 +277,6 @@ export default function Apropos() {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 12px;
-          margin-top: 18px;
         }
         .kpi .item {
           background: rgba(16, 26, 47, 0.9);
@@ -286,7 +323,7 @@ export default function Apropos() {
           font-weight: 600;
           color: white;
           box-shadow: 0 6px 24px rgba(34, 211, 238, 0.35);
-          transition: transform 0.15s ease;
+          transition: transform 0.15s;
         }
         .btn:hover {
           transform: translateY(-1px);
